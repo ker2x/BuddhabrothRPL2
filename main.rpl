@@ -1,0 +1,45 @@
+MAIN
+<<
+	(0,0) (-1,-1.5) 100 NOT_IN_MSET disp	// -> not in mset
+	(0,0) (-1,0) 100 NOT_IN_MSET disp	// -> in order 2 disc
+	(0,0) (0,0) 100 NOT_IN_MSET disp	// -> in main cardiod
+>>
+
+
+NOT_IN_MSET
+<<
+	-> Z C MAX_ITER 
+	<<
+		//((ABS(c - CMPLX(-1,0) )) < 0.25)
+		IF C (-1,0) - ABS 0.25 < THEN
+			"in order 2 disc" disp
+			false return
+		END  
+
+		//((ABS( 1.0 - SQRT(1-(4*c)) ))  < 1.0 )
+		IF 1.0 1.0 4 C * - sqrt - abs 1.0 < THEN
+			"in main cardioid" disp
+			false return
+		END
+
+		0 -> I 
+		<< 
+			WHILE Z abs 4.0 < I MAX_ITER < AND REPEAT
+				Z Z * C + ->num
+				'Z' sto
+				'I' incr
+			END
+
+			IF I MAX_ITER == THEN
+				"in mset" disp
+				false return
+			ELSE
+				"not in mset" disp
+				true return
+			END
+
+		>>
+
+	>>
+>>
+
